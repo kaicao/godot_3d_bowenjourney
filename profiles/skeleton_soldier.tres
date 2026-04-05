@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="EnemyProfile" format=3 uid="uid://chj06k7c8i4ek"]
+
+[ext_resource type="Script" uid="uid://ffmv3pn16hl3" path="res://enemy_profile.gd" id="1_vxs8f"]
+
+[resource]
+resource_name = "Skeleton Soldier"
+script = ExtResource("1_vxs8f")
+attack_damage = 15
+iq_level = 40
+attack_animations = "1H_Melee_Attack_Chop,1H_Melee_Attack_Stab"
+dodge_animations = "Dodge_Backward"
+death_animations = "Death_A,Death_B,Lie_Down"
+idle_animations = "Idle"
+movement_animations = "Running_A"
+hit_animations = "Hit_A"

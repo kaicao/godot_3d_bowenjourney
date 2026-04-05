@@ -237,7 +237,18 @@ func perform_attack_hit():
 	var result = space_state.intersect_ray(query)
 	
 	if result:
-		print("⚔️ Hit: ", result.collider.name)
+		var target = result.collider
+		print("⚔️ Hit: ", target.name)
+		
+		# Calculate damage based on attack type
+		var damage = 20 if not is_heavy_attack else 40
+		
+		# Call take_damage if the target has the method
+		if target.has_method("take_damage"):
+			target.take_damage(damage)
+			print("💥 Dealt ", damage, " damage to ", target.name)
+		else:
+			print("⚠️ Target cannot take damage")
 	else:
 		print("⚔️ Missed")
 

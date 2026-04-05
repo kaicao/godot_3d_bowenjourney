@@ -1,0 +1,44 @@
+[gd_scene format=3 uid="uid://d0xprwptvhv2d"]
+
+[sub_resource type="GDScript" id="GDScript_ynsbd"]
+script/source = "extends Node3D
+
+var bar: MeshInstance3D = null
+var background: MeshInstance3D = null
+var max_health: float = 100.0
+var current_health: float = 100.0
+
+func _ready():
+	bar = get_node_or_null(\"Bar\")
+	background = get_node_or_null(\"Background\")
+	update_health_bar()
+
+func update_health(health: float, max_hp: float):
+	current_health = health
+	max_health = max_hp
+	update_health_bar()
+
+func update_health_bar():
+	if not bar:
+		return
+	
+	var health_ratio = current_health / max_health if max_health > 0 else 0.0
+	
+	# Scale the bar width based on health
+	bar.scale = Vector3(max(0.05, health_ratio), 0.1, 0.1)
+	
+	# Change color based on health percentage
+	var material = StandardMaterial3D.new()
+	
+	if health_ratio > 0.6:
+		material.albedo_color = Color(0.0, 1.0, 0.0)  # Green
+	elif health_ratio > 0.3:
+		material.albedo_color = Color(1.0, 1.0, 0.0)  # Yellow
+	else:
+		material.albedo_color = Color(1.0, 0.0, 0.0)  # Red
+	
+	bar.set_surface_override_material(0, material)
+"
+
+[node name="" type="Node3D" unique_id=1172306925]
+script = SubResource("GDScript_ynsbd")

@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EnemyProfile" format=3 uid="uid://desfgdanco3pe"]
+
+[ext_resource type="Script" uid="uid://ffmv3pn16hl3" path="res://enemy_profile.gd" id="1_uxjt0"]
+
+[resource]
+script = ExtResource("1_uxjt0")
+max_health = 1000
+iq_level = 90

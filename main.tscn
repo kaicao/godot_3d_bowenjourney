@@ -5,8 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://nqjma56a50gt" path="res://addons/kaykit_character_pack_adventures/Characters/gltf/Knight.glb" id="1_ig7tw"]
 [ext_resource type="Script" uid="uid://w427whlancm5" path="res://enemy_ai.gd" id="4_7mycd"]
 [ext_resource type="PackedScene" uid="uid://diodidqd3noht" path="res://skeleton_sword.tscn" id="4_lquwl"]
+[ext_resource type="Resource" uid="uid://baawp8aq050c7" path="res://profiles/skeleton_boss.tres" id="5_5vw27"]
 [ext_resource type="PackedScene" uid="uid://b81mf7tq07pi3" path="res://skeleton_axe_shield.tscn" id="5_7mycd"]
+[ext_resource type="Resource" uid="uid://chj06k7c8i4ek" path="res://profiles/skeleton_soldier.tres" id="7_4c57u"]
 [ext_resource type="PackedScene" uid="uid://ci6ojwnwf3oir" path="res://skeleton_stuff.tscn" id="7_272bh"]
+[ext_resource type="Resource" uid="uid://dxgqthu8k0ws" path="res://profiles/skeleton_scout.tres" id="9_efxa6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h2yge"]
 height = 1.8
@@ -187,6 +190,7 @@ shape = SubResource("BoxShape3D_7mycd")
 [node name="SkeletonEnemy" type="CharacterBody3D" parent="." unique_id=1699868127]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.5, -10)
 script = ExtResource("4_7mycd")
+profile = ExtResource("5_5vw27")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonEnemy" unique_id=47267106]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
@@ -210,6 +214,7 @@ target_position = Vector3(0, 0, -10)
 [node name="SkeletonAxe" type="CharacterBody3D" parent="." unique_id=454619284]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -8)
 script = ExtResource("4_7mycd")
+profile = ExtResource("7_4c57u")
 
 [node name="Skeleton_Warrior" parent="SkeletonAxe" unique_id=1536359836 instance=ExtResource("5_7mycd")]
 
@@ -233,6 +238,7 @@ one_shot = true
 [node name="SkeletonArrow" type="CharacterBody3D" parent="." unique_id=473049593]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, -8)
 script = ExtResource("4_7mycd")
+profile = ExtResource("9_efxa6")
 
 [node name="Skeleton_Warrior" parent="SkeletonArrow" unique_id=1342728753 instance=ExtResource("7_272bh")]
 
