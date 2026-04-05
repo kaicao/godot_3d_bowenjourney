@@ -1,0 +1,254 @@
+[gd_scene format=3 uid="uid://6d1t46v0b22j"]
+
+[ext_resource type="Script" uid="uid://b1gkmqxbq66o7" path="res://player_controller.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bimq7eprix7ik" path="res://addons/kaykit_dungeon_remastered/Assets/gltf/floor_dirt_large.gltf.glb" id="1_h2yge"]
+[ext_resource type="PackedScene" uid="uid://nqjma56a50gt" path="res://addons/kaykit_character_pack_adventures/Characters/gltf/Knight.glb" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://w427whlancm5" path="res://enemy_ai.gd" id="4_7mycd"]
+[ext_resource type="PackedScene" uid="uid://diodidqd3noht" path="res://skeleton_sword.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://b81mf7tq07pi3" path="res://skeleton_axe_shield.tscn" id="5_7mycd"]
+[ext_resource type="PackedScene" uid="uid://ci6ojwnwf3oir" path="res://skeleton_stuff.tscn" id="7_272bh"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h2yge"]
+height = 1.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vivmo"]
+size = Vector3(100, 1, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1bvp3"]
+size = Vector3(1, 2, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h2yge"]
+size = Vector3(100, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lquwl"]
+size = Vector3(100, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7mycd"]
+size = Vector3(1, 2, 100)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1bvp3"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7mycd"]
+radius = 12.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lquwl"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_272bh"]
+radius = 8.0
+
+[node name="Main" type="Node3D" unique_id=327095621]
+
+[node name="Terrain" type="Node3D" parent="." unique_id=1916048919]
+
+[node name="Floor_0_0" type="Node3D" parent="Terrain" unique_id=41585151]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -8)
+
+[node name="FloorTile_0_0" parent="Terrain/Floor_0_0" unique_id=1730649975 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_1_0" type="Node3D" parent="Terrain" unique_id=1343119821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -8)
+
+[node name="FloorTile_1_0" parent="Terrain/Floor_1_0" unique_id=1762822358 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_2_0" type="Node3D" parent="Terrain" unique_id=1386249745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -8)
+
+[node name="FloorTile_2_0" parent="Terrain/Floor_2_0" unique_id=129781161 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_3_0" type="Node3D" parent="Terrain" unique_id=752496822]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -8)
+
+[node name="FloorTile_3_0" parent="Terrain/Floor_3_0" unique_id=1485439086 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_4_0" type="Node3D" parent="Terrain" unique_id=148682933]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -8)
+
+[node name="FloorTile_4_0" parent="Terrain/Floor_4_0" unique_id=171307941 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_4_1" type="Node3D" parent="Terrain" unique_id=2036295762]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -4)
+
+[node name="FloorTile_4_1" parent="Terrain/Floor_4_1" unique_id=1551237778 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_0_1" type="Node3D" parent="Terrain" unique_id=1072976725]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -4)
+
+[node name="FloorTile_0_1" parent="Terrain/Floor_0_1" unique_id=1798682241 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_1_1" type="Node3D" parent="Terrain" unique_id=1717998800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
+
+[node name="FloorTile_1_1" parent="Terrain/Floor_1_1" unique_id=1370500898 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_2_1" type="Node3D" parent="Terrain" unique_id=1548615624]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+
+[node name="FloorTile_2_1" parent="Terrain/Floor_2_1" unique_id=689162492 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_3_1" type="Node3D" parent="Terrain" unique_id=657200230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+
+[node name="FloorTile_3_1" parent="Terrain/Floor_3_1" unique_id=494923964 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_0_2" type="Node3D" parent="Terrain" unique_id=745793599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 0)
+
+[node name="FloorTile_0_2" parent="Terrain/Floor_0_2" unique_id=1955968633 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_1_2" type="Node3D" parent="Terrain" unique_id=1338713737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 0)
+
+[node name="FloorTile_1_2" parent="Terrain/Floor_1_2" unique_id=1033928112 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_2_2" type="Node3D" parent="Terrain" unique_id=937107188]
+
+[node name="FloorTile_2_2" parent="Terrain/Floor_2_2" unique_id=224426121 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_3_2" type="Node3D" parent="Terrain" unique_id=1677161175]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 0)
+
+[node name="FloorTile_3_2" parent="Terrain/Floor_3_2" unique_id=1765259610 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_4_2" type="Node3D" parent="Terrain" unique_id=2028492861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+
+[node name="FloorTile_4_2" parent="Terrain/Floor_4_2" unique_id=1862127981 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_2_3" type="Node3D" parent="Terrain" unique_id=315962667]
+
+[node name="FloorTile_2_3" parent="Terrain/Floor_2_3" unique_id=17995980 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_3_4" type="Node3D" parent="Terrain" unique_id=358125764]
+
+[node name="FloorTile_3_4" parent="Terrain/Floor_3_4" unique_id=769428269 instance=ExtResource("1_h2yge")]
+
+[node name="Floor_4_4" type="Node3D" parent="Terrain" unique_id=1405946813]
+
+[node name="Floor_0_3" type="Node3D" parent="Terrain" unique_id=1505362573]
+
+[node name="Floor_1_3" type="Node3D" parent="Terrain" unique_id=1188147787]
+
+[node name="Floor_4_3" type="Node3D" parent="Terrain" unique_id=435449747]
+
+[node name="Floor_0_4" type="Node3D" parent="Terrain" unique_id=238368314]
+
+[node name="Player" type="CharacterBody3D" parent="." unique_id=946451090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+script = ExtResource("1_0xm2m")
+
+[node name="Knight" parent="Player" unique_id=924259073 instance=ExtResource("1_ig7tw")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player" unique_id=1292432635]
+transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.34202012, 0, -0.34202012, 0.9396926, 0, 4, 6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player" unique_id=2025387452]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_h2yge")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=500502976]
+
+[node name="TerrainCollision" type="StaticBody3D" parent="." unique_id=555163162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TerrainCollision" unique_id=1494634454]
+shape = SubResource("BoxShape3D_vivmo")
+
+[node name="BoundaryWalls" type="Node3D" parent="." unique_id=642260154]
+
+[node name="Wall_West" type="StaticBody3D" parent="BoundaryWalls" unique_id=1163305299]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundaryWalls/Wall_West" unique_id=1659668236]
+shape = SubResource("BoxShape3D_1bvp3")
+
+[node name="Wall_North" type="StaticBody3D" parent="BoundaryWalls" unique_id=1187754693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -100)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundaryWalls/Wall_North" unique_id=758013085]
+shape = SubResource("BoxShape3D_h2yge")
+
+[node name="Wall_South" type="StaticBody3D" parent="BoundaryWalls" unique_id=1797678686]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 100)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundaryWalls/Wall_South" unique_id=2137870328]
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="Wall_East" type="StaticBody3D" parent="BoundaryWalls" unique_id=108411899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoundaryWalls/Wall_East" unique_id=1735612036]
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="SkeletonEnemy" type="CharacterBody3D" parent="." unique_id=1699868127]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.5, -10)
+script = ExtResource("4_7mycd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonEnemy" unique_id=47267106]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_1bvp3")
+
+[node name="Skeleton_Warrior" parent="SkeletonEnemy" unique_id=1476640785 instance=ExtResource("4_lquwl")]
+
+[node name="AttackTimer" type="Timer" parent="SkeletonEnemy" unique_id=540209721]
+one_shot = true
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="SkeletonEnemy" unique_id=1602037829]
+
+[node name="VisionArea" type="Area3D" parent="SkeletonEnemy" unique_id=1412944046]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonEnemy/VisionArea" unique_id=432021622]
+shape = SubResource("SphereShape3D_7mycd")
+
+[node name="VisionRay" type="RayCast3D" parent="SkeletonEnemy" unique_id=2049140843]
+target_position = Vector3(0, 0, -10)
+
+[node name="SkeletonAxe" type="CharacterBody3D" parent="." unique_id=454619284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -8)
+script = ExtResource("4_7mycd")
+
+[node name="Skeleton_Warrior" parent="SkeletonAxe" unique_id=1536359836 instance=ExtResource("5_7mycd")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonAxe" unique_id=245566248]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_lquwl")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="SkeletonAxe" unique_id=939876668]
+
+[node name="VisionArea" type="Area3D" parent="SkeletonAxe" unique_id=2042055314]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonAxe/VisionArea" unique_id=2124267749]
+shape = SubResource("SphereShape3D_272bh")
+
+[node name="VisionRay" type="RayCast3D" parent="SkeletonAxe" unique_id=129253456]
+target_position = Vector3(0, 0, -10)
+
+[node name="AttackTimer" type="Timer" parent="SkeletonAxe" unique_id=554434424]
+one_shot = true
+
+[node name="SkeletonArrow" type="CharacterBody3D" parent="." unique_id=473049593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, -8)
+script = ExtResource("4_7mycd")
+
+[node name="Skeleton_Warrior" parent="SkeletonArrow" unique_id=1342728753 instance=ExtResource("7_272bh")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonArrow" unique_id=242081089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_lquwl")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="SkeletonArrow" unique_id=2113703882]
+
+[node name="VisionArea" type="Area3D" parent="SkeletonArrow" unique_id=2043667734]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonArrow/VisionArea" unique_id=569012716]
+shape = SubResource("SphereShape3D_272bh")
+
+[node name="VisionRay" type="RayCast3D" parent="SkeletonArrow" unique_id=1027512839]
+target_position = Vector3(0, 0, -10)
+
+[node name="AttackTimer" type="Timer" parent="SkeletonArrow" unique_id=1238422565]
+one_shot = true
