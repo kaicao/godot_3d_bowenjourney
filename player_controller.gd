@@ -34,6 +34,8 @@ var animation_player: AnimationPlayer = null
 
 
 func _ready():
+	
+	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	
 	if has_node("Knight/AnimationPlayer"):

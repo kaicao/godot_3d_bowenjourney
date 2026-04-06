@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://drr4waxnrwscm"]
+
+[ext_resource type="Texture2D" uid="uid://251q6kbitb3m" path="res://addons/kaykit_dungeon_remastered/Assets/gltf/floor_dirt_large_dungeon_texture.png" id="1_drnlm"]
+
+[resource]
+albedo_texture = ExtResource("1_drnlm")
+uv1_scale = Vector3(250, 250, 1)

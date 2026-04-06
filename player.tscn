@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://bwfgwl7mtvwfa"]
+
+[ext_resource type="PackedScene" uid="uid://nqjma56a50gt" path="res://addons/kaykit_character_pack_adventures/Characters/gltf/Knight.glb" id="1_4flbx"]
+[ext_resource type="Script" uid="uid://b1gkmqxbq66o7" path="res://player_controller.gd" id="1_onrkg"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_onrkg"]
+height = 1.8
+
+[node name="Player" type="Node3D" unique_id=721029504]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." unique_id=968194353]
+script = ExtResource("1_onrkg")
+
+[node name="Knight" parent="CharacterBody3D" unique_id=924259073 instance=ExtResource("1_4flbx")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, -1, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CharacterBody3D" unique_id=51802760]
+transform = Transform3D(1, 0, 0, 0, 0.9396927, 0.34202015, 0, -0.34202015, 0.9396927, 0, 4, 6)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CharacterBody3D" unique_id=524616595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_onrkg")

@@ -38,7 +38,13 @@ var patrol_index: int = 0
 @onready var vision_area: Area3D = $VisionArea
 @onready var attack_timer_node: Timer = $AttackTimer
 
+# ⭐ NEW: Search for player periodically
+var player_search_timer: float = 0.0
+var player_search_interval: float = 2.0  # Search every 2 seconds
+
 func _ready():
+	print("[EnemyAI 🟢] ", name, " _ready() started")
+	
 	if profile:
 		max_health = profile.max_health
 		current_health = profile.max_health
@@ -49,16 +55,8 @@ func _ready():
 		max_health = 100
 		current_health = 100
 	
-	for node in get_tree().get_nodes_in_group("player"):
-		if node is CharacterBody3D:
-			player = node
-			break
-	
-	if not player:
-		for node in get_tree().get_current_scene().get_children():
-			if node is CharacterBody3D and "player" in node.name.to_lower():
-				player = node
-				break
+	# ⭐ FIX: Search for player, but don't rely on it being found yet
+	_find_player()
 	
 	if vision_area:
 		vision_area.body_entered.connect(_on_vision_body_entered)
@@ -70,8 +68,12 @@ func _ready():
 	if attack_timer_node:
 		attack_timer_node.wait_time = profile.attack_delay if profile else 0.5
 	
+	# ⭐ FIX: Don't call _face_player if player is null
 	if player:
 		call_deferred("_face_player")
+		print("[EnemyAI ✅] ", name, " found player: ", player.name)
+	else:
+		print("[EnemyAI ⚠️] ", name, " player NOT found in _ready(), will search periodically")
 	
 	_create_health_bar()
 	
@@ -79,12 +81,37 @@ func _ready():
 	state_enter_time = Time.get_ticks_msec() / 1000.0
 	last_state_change_time = state_enter_time
 
+# ⭐ NEW: Helper function to find player
+func _find_player() -> bool:
+	# Method 1: Group lookup (best)
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is CharacterBody3D:
+			player = node
+			return true
+	
+	# Method 2: Name search (fallback)
+	for node in get_tree().get_current_scene().get_children():
+		if node is CharacterBody3D and "player" in node.name.to_lower():
+			player = node
+			return true
+	
+	return false
+
 func _physics_process(delta):
 	if is_dead:
 		return
 	
+	# ⭐ NEW: Periodically search for player if we don't have one
+	if not player or not is_instance_valid(player):
+		player_search_timer += delta
+		if player_search_timer >= player_search_interval:
+			player_search_timer = 0.0
+			if _find_player():
+				print("[EnemyAI 🔍] ", name, " found player via periodic search!")
+	
+	# Track player position if visible
 	var overlapping = vision_area.get_overlapping_bodies() if vision_area else []
-	if overlapping.has(player):
+	if player and overlapping.has(player):
 		last_seen_position = player.global_position
 		last_seen_time = Time.get_ticks_msec()
 	
@@ -121,7 +148,8 @@ func _physics_process(delta):
 			if can_see_player():
 				transition_to(State.CHASE)
 		State.CHASE:
-			if player:
+			# ⭐ FIX: Check if player is valid before accessing
+			if player and is_instance_valid(player):
 				var dir = (player.global_position - global_position)
 				dir.y = 0
 				if dir.length() > 0.01:
@@ -135,32 +163,35 @@ func _physics_process(delta):
 					transition_to(State.ATTACK)
 				elif dist <= 1.5:
 					velocity = -(player.global_position - global_position).normalized() * (profile.move_speed if profile else 2.2) * 0.3
+			else:
+				# Player lost, go to search
+				transition_to(State.SEARCH)
 		State.ATTACK:
 			velocity = Vector3.ZERO
 			attack_timer += delta
 			var time_in_attack = (Time.get_ticks_msec() / 1000.0) - state_enter_time
 			var rt = profile.reaction_time if profile else 0.5
 			if time_in_attack < (profile.min_attack_duration if profile else 1.5):
-				if global_position.distance_to(player.global_position) > 6.0:
+				if player and is_instance_valid(player) and global_position.distance_to(player.global_position) > 6.0:
 					transition_to(State.CHASE)
 				elif attack_timer >= rt:
 					attack_timer = 0.0
 					perform_attack()
 					consecutive_attacks += 1
 					aggression_level = min(aggression_level + 0.2, 3.0)
-			elif global_position.distance_to(player.global_position) > 5.0:
+			elif player and is_instance_valid(player) and global_position.distance_to(player.global_position) > 5.0:
 				transition_to(State.CHASE)
 			elif attack_timer >= rt:
 				attack_timer = 0.0
 				perform_attack()
 				consecutive_attacks += 1
 		State.DODGE:
-			if player:
+			if player and is_instance_valid(player):
 				velocity = (global_position - player.global_position).normalized() * (profile.move_speed if profile else 2.2)
 				if (Time.get_ticks_msec() / 1000.0) - state_enter_time > 0.5:
 					transition_to(State.CHASE)
 		State.ESCAPE:
-			if player:
+			if player and is_instance_valid(player):
 				velocity = (global_position - player.global_position).normalized() * (profile.move_speed if profile else 2.2) * 1.3
 				if (Time.get_ticks_msec() / 1000.0) - state_enter_time > 3.0:
 					transition_to(State.CHASE)
@@ -173,11 +204,19 @@ func _physics_process(delta):
 	move_and_slide()
 
 func can_see_player() -> bool:
-	if not player or not vision_area:
+	# ⭐ FIX: Find player if we don't have one
+	if not player or not is_instance_valid(player):
+		_find_player()
+		if not player:
+			return false
+	
+	if not vision_area:
 		return false
+	
 	var overlapping = vision_area.get_overlapping_bodies()
 	if not overlapping.has(player):
 		return false
+	
 	var to_player = (player.global_position - global_position).normalized()
 	var forward = transform.basis.z
 	forward.y = 0
@@ -196,7 +235,8 @@ func perform_attack():
 			var chosen = attacks[randi() % attacks.size()]
 			if ap.has_animation(chosen):
 				ap.play(chosen)
-	if player and player.has_method("take_damage"):
+	# ⭐ FIX: Check player is valid before calling method
+	if player and is_instance_valid(player) and player.has_method("take_damage"):
 		player.take_damage(profile.attack_damage if profile else 10)
 
 func transition_to(new_state: State):
@@ -222,9 +262,13 @@ func transition_to(new_state: State):
 	if new_state == State.ATTACK:
 		attack_timer = 0.0
 
+# ⭐ FIX: Check if body is in "player" group, not just if body == player
 func _on_vision_body_entered(body):
-	if body == player and can_see_player():
-		transition_to(State.CHASE)
+	if body.is_in_group("player"):
+		player = body  # Update player reference
+		print("[EnemyAI 👁️] ", name, " vision detected player: ", body.name)
+		if can_see_player():
+			transition_to(State.CHASE)
 
 func _on_vision_body_exited(body):
 	if body == player and current_state == State.CHASE:
@@ -244,7 +288,6 @@ func take_damage(amount: int):
 	current_health = max(0, current_health - amount)
 	var health_percent = (current_health / float(max_health)) * 100.0
 	
-	# Log health status with emoji
 	var status = ""
 	if health_percent > 80:
 		status = "Healthy"
@@ -310,21 +353,17 @@ func die():
 	is_dead = true
 	velocity = Vector3.ZERO
 	
-	# Play random death animation from profile
 	var death_list = profile.death_animations if profile and profile.death_animations else "Death_A"
 	_play_random_animation(death_list, "death")
 	
-	# Disable collision after animation starts
 	await get_tree().create_timer(0.5).timeout
 	var collision_shape = get_node_or_null("CollisionShape3D")
 	if collision_shape:
 		collision_shape.set_deferred("disabled", true)
 	
-	# Stop AI
 	if attack_timer_node:
 		attack_timer_node.stop()
 	
-	# Remove health bar
 	if health_bar:
 		health_bar.queue_free()
 	
