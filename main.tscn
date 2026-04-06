@@ -232,3 +232,27 @@ target_position = Vector3(0, 0, -10)
 
 [node name="AttackTimer" type="Timer" parent="SkeletonAxe" unique_id=554434424]
 one_shot = true
+
+[node name="SkeletonAxe2" type="CharacterBody3D" parent="." unique_id=85012079]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, -8)
+script = ExtResource("4_7mycd")
+profile = ExtResource("7_4c57u")
+
+[node name="Skeleton_Warrior" parent="SkeletonAxe2" unique_id=1845432590 instance=ExtResource("5_7mycd")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonAxe2" unique_id=1455867663]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_lquwl")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="SkeletonAxe2" unique_id=352178164]
+
+[node name="VisionArea" type="Area3D" parent="SkeletonAxe2" unique_id=1368746019]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SkeletonAxe2/VisionArea" unique_id=622144803]
+shape = SubResource("SphereShape3D_272bh")
+
+[node name="VisionRay" type="RayCast3D" parent="SkeletonAxe2" unique_id=1955041417]
+target_position = Vector3(0, 0, -10)
+
+[node name="AttackTimer" type="Timer" parent="SkeletonAxe2" unique_id=1772501207]
+one_shot = true
