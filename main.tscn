@@ -25,6 +25,9 @@ radius = 8.0
 [node name="Main" type="Node3D" unique_id=327095621]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=500502976]
+transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.9659258, 62, 128, 0)
+light_color = Color(0.9999997, 0.91208804, 0.58716434, 1)
+light_energy = 1.593
 
 [node name="Player" parent="." unique_id=721029504 instance=ExtResource("7_272bh")]
 transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 0, 2, 0)
