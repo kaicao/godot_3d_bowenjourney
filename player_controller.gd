@@ -31,6 +31,8 @@ var defend_start_time: float = 0.0
 
 # Animation
 var animation_player: AnimationPlayer = null
+var is_moving: bool = false
+var current_move_animation: String = ""
 
 
 func _ready():
@@ -134,6 +136,9 @@ func _physics_process(delta):
 	if is_attacking:
 		velocity.x = 0
 		velocity.z = 0
+	
+	# Update movement animations
+	update_movement_animation()
 
 
 # ==================== JUMP SYSTEM ====================
@@ -290,3 +295,38 @@ func stop_defend():
 	
 	if animation_player:
 		animation_player.stop()
+
+
+# ==================== MOVEMENT ANIMATIONS ====================
+
+func update_movement_animation():
+	if is_attacking or is_defending or is_jumping:
+		# Don't play movement animations during combat actions
+		return
+	
+	var current_speed = velocity.length()
+	
+	if current_speed > 0.1:
+		# Character is moving
+		is_moving = true
+		# Choose animation based on speed
+		var target_anim = ""
+		if current_speed > speed * 0.8:
+			target_anim = "Running_A"
+		else:
+			target_anim = "Walking_A"
+		
+		# Play animation if not already playing the correct one
+		if animation_player:
+			if not animation_player.is_playing() or animation_player.current_animation != target_anim:
+				if animation_player.has_animation(target_anim):
+					animation_player.play(target_anim)
+					current_move_animation = target_anim
+	else:
+		# Character is idle
+		if is_moving:
+			is_moving = false
+			# Play idle animation
+			if animation_player and animation_player.has_animation("Idle"):
+				animation_player.play("Idle")
+			current_move_animation = ""

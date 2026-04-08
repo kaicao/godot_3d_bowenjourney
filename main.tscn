@@ -42,7 +42,7 @@ script = ExtResource("4_7mycd")
 profile = ExtResource("5_5vw27")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy/SkeletonBoss1" unique_id=47267106]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_1bvp3")
 
 [node name="Skeleton_Warrior" parent="Enemy/SkeletonBoss1" unique_id=1476640785 instance=ExtResource("4_lquwl")]
@@ -68,7 +68,7 @@ profile = ExtResource("7_4c57u")
 [node name="Skeleton_Warrior" parent="Enemy/SkeletonAxe" unique_id=1536359836 instance=ExtResource("5_7mycd")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy/SkeletonAxe" unique_id=245566248]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_lquwl")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="Enemy/SkeletonAxe" unique_id=939876668]
@@ -92,7 +92,7 @@ profile = ExtResource("7_4c57u")
 [node name="Skeleton_Warrior" parent="Enemy/SkeletonAxe2" unique_id=1845432590 instance=ExtResource("5_7mycd")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy/SkeletonAxe2" unique_id=1455867663]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_lquwl")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="Enemy/SkeletonAxe2" unique_id=352178164]
@@ -428,7 +428,7 @@ profile = ExtResource("7_4c57u")
 [node name="Skeleton_Warrior" parent="Enemy/SkeletonAxe14" unique_id=724645626 instance=ExtResource("5_7mycd")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy/SkeletonAxe14" unique_id=1548571096]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_lquwl")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="Enemy/SkeletonAxe14" unique_id=2066096043]

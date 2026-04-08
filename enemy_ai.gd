@@ -38,6 +38,10 @@ var patrol_index: int = 0
 @onready var vision_area: Area3D = $VisionArea
 @onready var attack_timer_node: Timer = $AttackTimer
 
+# Animation
+var animation_player: AnimationPlayer = null
+var is_moving: bool = false
+
 # ⭐ NEW: Search for player periodically
 var player_search_timer: float = 0.0
 var player_search_interval: float = 2.0  # Search every 2 seconds
@@ -77,6 +81,9 @@ func _ready():
 	
 	_create_health_bar()
 	
+	# ⭐ NEW: Get AnimationPlayer
+	_find_animation_player()
+	
 	current_state = State.IDLE
 	state_enter_time = Time.get_ticks_msec() / 1000.0
 	last_state_change_time = state_enter_time
@@ -96,6 +103,65 @@ func _find_player() -> bool:
 			return true
 	
 	return false
+
+# ⭐ NEW: Helper function to find AnimationPlayer with verbose logging
+func _find_animation_player():
+	print("[EnemyAI 🔍] ", name, " searching for AnimationPlayer...")
+	print("[EnemyAI 🔍] ", name, " children: ", get_children().map(func(c): return c.name))
+	
+	if has_node("AnimationPlayer"):
+		animation_player = $AnimationPlayer
+		print("[EnemyAI 🎬✅] ", name, " found AnimationPlayer (direct child)")
+		print("[EnemyAI 🎬] ", name, " available animations: ", animation_player.get_animation_list())
+	elif has_node("Rig/AnimationPlayer"):
+		animation_player = $Rig/AnimationPlayer
+		print("[EnemyAI 🎬✅] ", name, " found AnimationPlayer (in Rig)")
+		print("[EnemyAI 🎬] ", name, " available animations: ", animation_player.get_animation_list())
+	elif has_node("Skeleton_Warrior/AnimationPlayer"):
+		animation_player = $Skeleton_Warrior/AnimationPlayer
+		print("[EnemyAI 🎬✅] ", name, " found AnimationPlayer (in Skeleton_Warrior)")
+		print("[EnemyAI 🎬] ", name, " available animations: ", animation_player.get_animation_list())
+	else:
+		print("[EnemyAI ❌] ", name, " NO AnimationPlayer found in any location!")
+		print("[EnemyAI 🔍] ", name, " checking all children recursively...")
+		for child in get_children():
+			print("[EnemyAI 🔍]   - Child: ", child.name, " (", child.get_class(), ")")
+			if child.get_child_count() > 0:
+				for grandchild in child.get_children():
+					print("[EnemyAI 🔍]     └─ Grandchild: ", grandchild.name, " (", grandchild.get_class(), ")")
+
+# ⭐ NEW: Update movement animations with debugging
+func update_movement_animation():
+	if is_dead:
+		return
+	
+	# Debug: Log state and velocity
+	# print("[EnemyAI 🎬] ", name, " is_moving=", is_moving, " velocity=", velocity.length(), " state=", current_state)
+	
+	if is_moving:
+		if animation_player:
+			var target_anim = "Walking_A"
+			if not animation_player.is_playing() or animation_player.current_animation != target_anim:
+				if animation_player.has_animation(target_anim):
+					animation_player.play(target_anim)
+					print("[EnemyAI 🎬✅] ", name, " playing Walking_A (state=", current_state, ")")
+				elif animation_player.has_animation("Running_A"):
+					animation_player.play("Running_A")
+					print("[EnemyAI 🎬✅] ", name, " playing Running_A (state=", current_state, ")")
+				else:
+					print("[EnemyAI ⚠️] ", name, " NO walking animation found! Available: ", animation_player.get_animation_list())
+			# Debug: Check if animation is actually playing
+			# if animation_player.is_playing():
+			# 	print("[EnemyAI 🎬] ", name, " animation playing: ", animation_player.current_animation)
+	else:
+		if animation_player:
+			if not animation_player.is_playing() or (animation_player.current_animation != "Idle" and animation_player.current_animation != "Idle_Combat"):
+				if animation_player.has_animation("Idle"):
+					animation_player.play("Idle")
+					print("[EnemyAI 🎬✅] ", name, " playing Idle")
+				elif animation_player.has_animation("Idle_Combat"):
+					animation_player.play("Idle_Combat")
+					print("[EnemyAI 🎬✅] ", name, " playing Idle_Combat")
 
 func _physics_process(delta):
 	if is_dead:
@@ -122,9 +188,11 @@ func _physics_process(delta):
 	
 	match current_state:
 		State.IDLE:
+			# print("[EnemyAI 📊] ", name, " state: IDLE")
 			if can_see_player():
 				transition_to(State.CHASE)
 		State.PATROL:
+			print("[EnemyAI 📊] ", name, " state: PATROL (velocity=", velocity.length(), ")")
 			if patrol_points and not patrol_points.is_empty():
 				var target = patrol_points[patrol_index]
 				if global_position.distance_to(target) < 0.5:
@@ -136,6 +204,7 @@ func _physics_process(delta):
 			if can_see_player():
 				transition_to(State.CHASE)
 		State.SEARCH:
+			print("[EnemyAI 📊] ", name, " state: SEARCH (velocity=", velocity.length(), ")")
 			var ts = (Time.get_ticks_msec() - last_seen_time) / 1000.0
 			if ts > 5.0:
 				transition_to(State.PATROL if patrol_points and not patrol_points.is_empty() else State.IDLE)
@@ -148,6 +217,7 @@ func _physics_process(delta):
 			if can_see_player():
 				transition_to(State.CHASE)
 		State.CHASE:
+			print("[EnemyAI 📊] ", name, " state: CHASE (velocity=", velocity.length(), " is_moving=", is_moving, ")")
 			# ⭐ FIX: Check if player is valid before accessing
 			if player and is_instance_valid(player):
 				var dir = (player.global_position - global_position)
@@ -167,6 +237,7 @@ func _physics_process(delta):
 				# Player lost, go to search
 				transition_to(State.SEARCH)
 		State.ATTACK:
+			print("[EnemyAI 📊] ", name, " state: ATTACK")
 			velocity = Vector3.ZERO
 			attack_timer += delta
 			var time_in_attack = (Time.get_ticks_msec() / 1000.0) - state_enter_time
@@ -186,11 +257,13 @@ func _physics_process(delta):
 				perform_attack()
 				consecutive_attacks += 1
 		State.DODGE:
+			print("[EnemyAI 📊] ", name, " state: DODGE (velocity=", velocity.length(), ")")
 			if player and is_instance_valid(player):
 				velocity = (global_position - player.global_position).normalized() * (profile.move_speed if profile else 2.2)
 				if (Time.get_ticks_msec() / 1000.0) - state_enter_time > 0.5:
 					transition_to(State.CHASE)
 		State.ESCAPE:
+			print("[EnemyAI 📊] ", name, " state: ESCAPE (velocity=", velocity.length(), ")")
 			if player and is_instance_valid(player):
 				velocity = (global_position - player.global_position).normalized() * (profile.move_speed if profile else 2.2) * 1.3
 				if (Time.get_ticks_msec() / 1000.0) - state_enter_time > 3.0:
@@ -202,6 +275,12 @@ func _physics_process(delta):
 		velocity.y = 0
 	
 	move_and_slide()
+	
+	# Update is_moving based on velocity
+	is_moving = velocity.length() > 0.1
+	
+	# Update movement animations
+	update_movement_animation()
 
 func can_see_player() -> bool:
 	# ⭐ FIX: Find player if we don't have one
