@@ -32,12 +32,28 @@ class_name EnemyProfile
 @export_range(0.1, 5.0) var attack_delay: float = 0.5
 ## Probability (0.0 to 1.0) that the enemy will attempt a dodge.
 @export_range(0.0, 1.0) var dodge_chance: float = 0.15
+## Time in seconds between dodge attempts. Lower = can dodge more frequently.
+@export_range(0.5, 5.0) var dodge_cooldown_time: float = 2.0
+## Probability (0.0 to 1.0) that the enemy will defend instead of dodge.
+@export_range(0.0, 1.0) var defend_chance: float = 0.10
 ## Minimum time (seconds) the enemy must stay in the ATTACK state.
 @export_range(0.1, 5.0) var min_attack_duration: float = 1.5
 ## Minimum time (seconds) the enemy must stay in the CHASE state.
 @export_range(0.1, 5.0) var min_chase_duration: float = 0.5
 ## Cooldown between state transitions to prevent "jittery" AI behavior.
 @export_range(0.0, 1.0) var state_change_cooldown: float = 0.3
+
+@export_group("🏃 Escape Behavior")
+## ⭐ Can this enemy type escape? (false for bosses, berserkers)
+@export var can_escape: bool = true
+## ⭐ Health % threshold to trigger escape (e.g., 30.0 = 30%)
+@export_range(0.0, 100.0) var escape_health_threshold: float = 30.0
+## ⭐ Minimum distance (meters) to run when escaping
+@export_range(5.0, 50.0) var escape_distance_min: float = 10.0
+## ⭐ Maximum distance (meters) to run when escaping
+@export_range(5.0, 50.0) var escape_distance_max: float = 20.0
+## ⭐ Speed multiplier when escaping (1.3 = 30% faster)
+@export_range(1.0, 3.0) var escape_speed_multiplier: float = 1.3
 
 @export_group("AI Personality")
 ## Intelligence level (0-100). Affects reaction speed and awareness.

@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="PlayerProfile" format=3 uid="uid://d28sj7jfer8ay"]
+
+[ext_resource type="Script" uid="uid://t0mnamov0cl8" path="res://player_profile.gd" id="1_d1rfr"]
+
+[resource]
+resource_name = "player_default"
+script = ExtResource("1_d1rfr")

@@ -1,5 +1,6 @@
 extends CharacterBody3D
 
+@export var profile: PlayerProfile  # Profile-based configuration
 @export var speed: float = 5.0
 @export var mouse_sensitivity: float = 0.1
 
@@ -34,11 +35,33 @@ var animation_player: AnimationPlayer = null
 var is_moving: bool = false
 var current_move_animation: String = ""
 
+# Health system
+var current_health: int = 1000
+var max_health: int = 1000
+var is_dead: bool = false
+
+# ⭐ NEW: Getter for enemy AI to check attack state
+func get_is_attacking() -> bool:
+	return is_attacking
+
 
 func _ready():
 	
 	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	
+	# Initialize from profile if available
+	if profile:
+		speed = profile.move_speed
+		mouse_sensitivity = profile.mouse_sensitivity
+		max_health = profile.max_health
+		current_health = max_health
+		jump_strength = profile.jump_strength
+		print("📋 Loaded player profile: max_health=", max_health, " speed=", speed)
+	else:
+		# Default values
+		max_health = 1000
+		current_health = max_health
 	
 	if has_node("Knight/AnimationPlayer"):
 		animation_player = $Knight/AnimationPlayer
@@ -295,6 +318,81 @@ func stop_defend():
 	
 	if animation_player:
 		animation_player.stop()
+
+
+# ==================== DAMAGE SYSTEM ====================
+
+@export var defend_damage_reduction: float = 0.9  # 90% damage reduction when defending
+
+func take_damage(amount: float):
+	if is_dead:
+		return
+	
+	var old_health = current_health
+	var final_damage = amount
+	
+	# ⭐ Check if defending
+	var is_defending_now = is_defending and defend_active
+	
+	if is_defending_now:
+		# Apply damage reduction
+		final_damage = amount * (1.0 - defend_damage_reduction)
+		current_health = max(0, current_health - final_damage)
+		
+		var damage_percent = (amount / float(max_health)) * 100.0
+		var reduced_percent = final_damage / amount * 100.0
+		
+		if final_damage <= 0:
+			print("[COMBAT ️] PLAYER PERFECT BLOCK! DMG=", amount, " (", damage_percent, "%) → 0 | HP=", old_health, "→", current_health, "/", max_health)
+		else:
+			print("[COMBAT ️] PLAYER DEFENDING! DMG=", amount, " → ", final_damage, " (-", 100.0 - reduced_percent, "%) | HP=", old_health, "→", current_health, "/", max_health)
+	else:
+		current_health = max(0, current_health - amount)
+		var damage_percent = (amount / float(max_health)) * 100.0
+		print("[COMBAT ️] PLAYER HIT! DMG=", amount, " (", damage_percent, "%) | HP=", old_health, "→", current_health, "/", max_health)
+	
+	# ⭐ Play hit animation if NOT defending
+	if not is_defending_now:
+		if animation_player and animation_player.has_animation("Hit_A"):
+			animation_player.play("Hit_A")
+	else:
+		# Keep defending
+		if animation_player and animation_player.has_animation("Blocking"):
+			animation_player.play("Blocking")
+	
+	# Check death
+	if current_health <= 0:
+		print("[COMBAT 💀] PLAYER DEFEATED! Game Over.")
+		is_dead = true
+		die()
+
+
+func die():
+	print("💀 PLAYER DIED!")
+	is_dead = true
+	velocity = Vector3.ZERO
+	
+	# Play death animation if available
+	if animation_player and animation_player.has_animation("Death_A"):
+		animation_player.play("Death_A")
+	
+	# Disable collision
+	var collision = get_node_or_null("CollisionShape3D")
+	if collision:
+		collision.set_deferred("disabled", true)
+	
+	# Game over logic here - FIXED: Store scene path BEFORE waiting
+	var scene_path = scene_file_path  # Store path now while still valid
+	print("💀 Game Over - reloading scene: ", scene_path)
+	
+	await get_tree().create_timer(2.0).timeout
+	
+	# Use stored path to reload
+	if scene_path and not scene_path.is_empty():
+		get_tree().change_scene_to_file(scene_path)
+	else:
+		# Ultimate fallback: quit to project menu
+		get_tree().quit()
 
 
 # ==================== MOVEMENT ANIMATIONS ====================

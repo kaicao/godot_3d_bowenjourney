@@ -6,6 +6,7 @@
 resource_name = "Skeleton Soldier"
 script = ExtResource("1_vxs8f")
 attack_damage = 15
+vision_fov = 120.0
 iq_level = 40
 attack_animations = "1H_Melee_Attack_Chop,1H_Melee_Attack_Stab"
 dodge_animations = "Dodge_Backward"
